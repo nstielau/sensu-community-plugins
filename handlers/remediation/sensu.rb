@@ -119,12 +119,14 @@ class Remediator < Sensu::Handler
           range = Range.new($~.to_a[1].to_i, 9999).to_a
           next unless range.include?(occurrences)
         end
+
+        # Check remediations matching the current severity
+        next unless (conditions["severities"] || []).include?(severity)
+
+        remediations_to_trigger << check
+
       end
 
-      # Check remediations matching the current severity
-      next unless (conditions["severities"] || []).include?(severity)
-
-      remediations_to_trigger << check
     end
     remediations_to_trigger
   end
